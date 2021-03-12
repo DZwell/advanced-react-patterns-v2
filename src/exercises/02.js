@@ -4,6 +4,9 @@ import React from 'react'
 import {Switch} from '../switch'
 
 class Toggle extends React.Component {
+  static On = (props) => props.on ? props.children : null;
+  static Off = (props) => props.on ? null : props.children;
+  static Button = (props) => <Switch on={props.on} onClick={props.toggle} />;
   // you can create function components as static properties!
   // for example:
   // static Candy = (props) => <div>CANDY! {props.children}</div>
@@ -33,10 +36,14 @@ class Toggle extends React.Component {
     // 2. React.cloneElement: https://reactjs.org/docs/react-api.html#cloneelement
     //
     // 🐨 you'll want to completely replace the code below with the above logic.
-    const {on} = this.state
-    return <Switch on={on} onClick={this.toggle} />
+    return React.Children.map(this.props.children, child =>
+      React.cloneElement(child, {
+        on: this.state.on,
+        toggle: this.toggle,
+      }));
   }
 }
+
 
 // 💯 Support rendering non-Toggle components within Toggle without incurring warnings in the console.
 // for example, try to render a <span>Hello</span> inside <Toggle />
